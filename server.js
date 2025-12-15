@@ -439,6 +439,36 @@ app.get('/get-current-user', function (req, res) {
     }
 });
 
+app.get('/register', (req, res) => {
+    res.sendFile(__dirname + "/public/register.html");
+});
+
+
+app.post('/register', (req, res) => {
+    const { username, password, fullname } = req.body;
+
+    const DEFAULT_SECURITY_LEVEL = 0;
+
+    const newUser = new User({
+        username,
+        fullname,
+        security_level: DEFAULT_SECURITY_LEVEL
+    });
+
+    User.register(newUser, password, (err, user) => {
+        if (err) {
+            console.log(err.message);
+            return res.redirect(
+                '/register?error=' + encodeURIComponent(err.message)
+            );
+        }
+
+        passport.authenticate('local')(req, res, () => {
+            res.redirect('/');
+        });
+    });
+});
+
 app.post('/remove-player-from-tournament', ensureAuthenticated, async (req, res) => {
     const { tournamentId, playerId } = req.body;
 
