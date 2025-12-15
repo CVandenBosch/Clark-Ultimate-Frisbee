@@ -17,12 +17,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //Setup URI
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/clark-ultimate';
+const mongoUri = process.env.MONGO_URI;
 mongoose.connect(mongoUri)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'default_secret_for_local',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false
 }));
