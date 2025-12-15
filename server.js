@@ -3,6 +3,10 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+//Add passport sessions
+const session = require('express-session');
+const passport = require('passport');
+const passportLocalMongoose = require('passport-local-mongoose').default;
 
 //Configure body-parser and set static dir path.
 const app = express();
@@ -26,11 +30,6 @@ app.use(session({
 //Authorized User Information:
 //username:authuser@coolness.com
 //password:test
-
-//Add passport sessions
-const session = require('express-session');
-const passport = require('passport');
-const passportLocalMongoose = require('passport-local-mongoose').default;
 
 //Initialize passport
 app.use(passport.initialize());
