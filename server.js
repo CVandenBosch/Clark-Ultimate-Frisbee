@@ -25,7 +25,7 @@ mongoose.connect('mongodb://localhost:27017/ClarkWTKB', {})
 //Add passport sessions
 const session = require('express-session');
 const passport = require('passport');
-const passportLocalMongoose = require('passport-local-mongoose');
+const passportLocalMongoose = require('passport-local-mongoose').default;
 
 //Initialize passport
 require('dotenv').config();
