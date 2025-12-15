@@ -453,3 +453,10 @@ app.post('/remove-player-from-tournament', ensureAuthenticated, async (req, res)
         res.status(500).send({ message: "error", error: err.message });
     }
 });
+
+
+const PORT = process.env.PORT || 8080;  // Must use process.env.PORT for App Engine
+
+app.listen(PORT, () => {
+  console.log(`server started at ${PORT}`);
+});
