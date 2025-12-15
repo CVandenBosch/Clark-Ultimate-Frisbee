@@ -1,1 +1,5 @@
-
+runtime: nodejs24
+instance_class: F2
+env_variables:
+  MONGO_URI: ''
+  SESSION_SECRET: ''
