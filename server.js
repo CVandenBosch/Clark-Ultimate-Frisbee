@@ -12,11 +12,16 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//Configure Mongoose
-mongoose.connect('mongodb://localhost:27017/ClarkWTKB', {})
-    .then(function (db) {
-        console.log("db connected");
-    });
+//Setup URI
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/clark-ultimate';
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'default_secret_for_local',
+  resave: false,
+  saveUninitialized: false
+}));
 
 //Authorized User Information:
 //username:authuser@coolness.com
@@ -28,12 +33,6 @@ const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose').default;
 
 //Initialize passport
-require('dotenv').config();
-app.use(session({
-    secret: process.env.PASSPORT_SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
 app.use(passport.initialize());
 app.use(passport.session());
 
