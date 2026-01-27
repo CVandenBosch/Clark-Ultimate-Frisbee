@@ -164,7 +164,7 @@
          TEAMS SECTION
 =========================== */
 .teams-intro {
-    max-width: 1000px;
+    max-width: 800px;
     margin: auto;
     padding: 40px 15px;
 }
@@ -317,7 +317,7 @@
 
 #countdown_section {
     padding: 60px 20px;
-    background: #fff;
+    background: white;
 }
 
 .countdown-container {
@@ -514,6 +514,22 @@
     gap: 1rem;
 }
 
+/* Tournament list search and filters */
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-group #search_box {
+    flex: 1;
+    min-width: 0;
+}
+
+.input-group .btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
 /* ===========================
           FOOTER
 =========================== */
@@ -662,11 +678,6 @@
         font-size: 2.5rem;
     }
 }
-
-.page-shell {
-    min-height: 100dvh;
-}
-
 
 /* Mobile devices */
 @media (max-width: 992px) {
@@ -845,6 +856,11 @@
         font-size: 0.7rem;
     }
     
+    .footer-team-link {
+        font-size: 0.65rem;
+        padding: 2px 4px;
+    }
+    
     .footer-divider {
         display: none;
     }
@@ -885,30 +901,47 @@
     }
     
     .countdown-display {
-        gap: 10px;
+        gap: 8px;
+        flex-wrap: nowrap; /* Prevent wrapping */
     }
     
     .time-unit {
-        min-width: 90px;
-        padding: 15px 20px;
+        min-width: 80px;
+        padding: 12px 15px;
+        flex: 1; /* Allow units to shrink evenly */
     }
     
     .time-value {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
     
     .time-label {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
     
     .time-separator {
-        font-size: 2rem;
-        margin: 0 3px;
+        font-size: 1.5rem;
+        margin: 0 2px;
+        flex-shrink: 0; /* Don't let separators shrink */
     }
     
     .celebration-text {
         font-size: 3rem;
         padding: 0 20px;
+    }
+    
+    /* Tournament list tablet adjustments */
+    .input-group {
+        flex-wrap: wrap;
+    }
+    
+    .input-group #search_box {
+        flex: 1 1 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .input-group .btn {
+        flex: 1;
     }
 }
 
@@ -1029,6 +1062,12 @@
         font-size: 0.65rem;
     }
     
+    .footer-team-link {
+        font-size: 0.55rem;
+        padding: 2px 3px;
+        margin-top: 2px;
+    }
+    
     .footer-right p {
         font-size: 0.65rem;
     }
@@ -1053,33 +1092,51 @@
         font-size: 1rem;
     }
     
+    /* Tournament list search and filters mobile */
+    .input-group {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .input-group #search_box {
+        width: 100%;
+        height: 45px;
+    }
+    
+    .input-group .btn {
+        width: 100%;
+        height: 45px;
+    }
+    
     /* Countdown extra small mobile adjustments */
     .countdown-title {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         margin-bottom: 20px;
     }
     
     .countdown-display {
-        gap: 8px;
+        gap: 4px;
+        flex-wrap: nowrap;
     }
     
     .time-unit {
-        min-width: 70px;
-        padding: 12px 15px;
+        min-width: 60px;
+        padding: 8px 10px;
+        flex: 1;
     }
     
     .time-value {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
     
     .time-label {
-        font-size: 0.7rem;
-        letter-spacing: 1px;
+        font-size: 0.6rem;
+        letter-spacing: 0.5px;
     }
     
     .time-separator {
-        font-size: 1.5rem;
-        margin: 0 2px;
+        font-size: 1.2rem;
+        margin: 0 1px;
     }
     
     .celebration-text {

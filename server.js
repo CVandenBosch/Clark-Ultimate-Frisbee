@@ -1,6 +1,5 @@
 //npm i express body-parser mongoose
 //npm i express-session passport passport-local passport-local-mongoose
-require('dotenv').config();
 const express = require("express");
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
