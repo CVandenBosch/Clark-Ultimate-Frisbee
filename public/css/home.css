@@ -205,31 +205,51 @@
 /* ===========================
             MAPS
 =========================== */
-
-@media (max-width: 576px) {
-    #schedule_section {
-        padding: 1rem;
-    }
-
-    #schedule_section h1 {
-        font-size: 1.5rem;
-    }
-
-    .schedule-col {
-        font-size: 0.85rem;
-        padding: 0.4rem 0.2rem;
-    }
-
-    .map-section h2 {
-        font-size: 1.25rem;
-    }
-}
 .map-section {
     background-color: rgba(255, 255, 255, 0.3);
     padding: 1rem;
     border-radius: 10px;
     margin-bottom: 1rem;
 }
+
+/* ===========================
+         HISTORY PAGE
+=========================== */
+#history_section {
+    padding: 20px;
+}
+
+#history_section h1 {
+    margin-bottom: 30px;
+}
+
+.history-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.history-images {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.history-images img {
+    width: 300px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.history-iframe {
+    width: 60%;
+    height: 1000px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
 .map-header {
     cursor: pointer;
     padding: 0.5rem;
@@ -237,21 +257,26 @@
     justify-content: space-between;
     align-items: center;
 }
+
 .map-header:hover {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
 }
+
 .map-toggle {
     transition: transform 0.3s ease;
 }
+
 .map-toggle.rotated {
     transform: rotate(180deg);
 }
+
 .map-content {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
 }
+
 .map-content.show {
     max-height: 350px;
     margin-top: 1rem;
@@ -373,4 +398,384 @@
 
 .list-group-item-new {
     background-color: #ffee8c
+}
+
+/* ===========================
+    MOBILE RESPONSIVE STYLES
+=========================== */
+
+/* Tablets and small laptops */
+@media (max-width: 992px) {
+    .navbar-brand img {
+        height: 80px;
+    }
+    
+    .brand-text {
+        margin-left: 30px;
+    }
+    
+    .team-title {
+        font-size: 1.5rem;
+    }
+    
+    .team-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .carousel-item {
+        height: 500px;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+    /* Navbar mobile fixes */
+    .brand-text {
+        margin-left: 15px;
+    }
+    
+    .navbar-brand img {
+        height: 60px;
+    }
+    
+    .team-title {
+        font-size: 1.25rem;
+    }
+    
+    .team-subtitle {
+        font-size: 1rem;
+    }
+    
+    /* FORCE navbar to be normal dropdown - disable ALL offcanvas behavior */
+    .navbar-collapse {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translate(0, 0) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        visibility: visible !important;
+        background-color: var(--background-soft);
+        padding: 0;
+        margin: 0;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    .navbar-collapse.collapse:not(.show) {
+        display: none;
+    }
+    
+    .navbar-collapse.collapsing {
+        position: static !important;
+        height: 0;
+        overflow: hidden;
+        transition: height 0.35s ease;
+        transform: translate(0, 0) !important;
+        width: 100% !important;
+    }
+    
+    .navbar-collapse.collapse.show {
+        display: block;
+        height: auto;
+        width: 100% !important;
+    }
+    
+    /* Ensure navbar takes full width and stacks vertically */
+    .custom-navbar .w-100 {
+        flex-wrap: wrap;
+    }
+    
+    #navbarNav {
+        flex-basis: 100%;
+        width: 100%;
+    }
+    
+    .navbar-nav {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .navbar-nav .nav-item + .nav-item {
+        margin-left: 0;
+    }
+    
+    .navbar-nav .nav-link {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        font-size: 1.1rem;
+        width: 100%;
+    }
+    
+    .join-btn {
+        margin-left: 0 !important;
+        margin-top: 0.5rem;
+        display: block;
+        text-align: center;
+        width: 100%;
+    }
+    
+    /* Carousel mobile fixes */
+    .carousel-item {
+        height: 400px;
+    }
+    
+    .carousel-caption {
+        padding: 0.75rem 1rem;
+        display: block !important;
+        position: absolute;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+    }
+    
+    .carousel-caption h5 {
+        font-size: 1.25rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 0.9rem;
+    }
+    
+    /* Info section mobile fixes */
+    #info_section .features-wrapper {
+        margin: 10px 0;
+        padding: 15px;
+    }
+    
+    #info_section .features-number {
+        font-size: 2rem;
+    }
+    
+    #info_section .features-name {
+        font-size: 0.9rem;
+    }
+    
+    /* Teams section mobile fixes */
+    .teams-intro {
+        padding: 20px 15px;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
+    }
+    
+    .section-description {
+        font-size: 1rem;
+    }
+    
+    .team-card {
+        padding: 20px;
+    }
+    
+    .team-card-name {
+        font-size: 1.5rem;
+    }
+    
+    .team-card-subtitle {
+        font-size: 1rem;
+    }
+    
+    /* Footer mobile - SINGLE ROW */
+    .footer-content {
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+    
+    .footer-left {
+        justify-self: start;
+        padding-right: 0;
+        gap: 8px;
+    }
+    
+    .footer-logo {
+        height: 40px;
+    }
+    
+    .footer-team-title {
+        font-size: 0.85rem;
+    }
+    
+    .footer-team-subtitle {
+        font-size: 0.7rem;
+    }
+    
+    .footer-divider {
+        display: none;
+    }
+    
+    .footer-right {
+        justify-self: end;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 0;
+        gap: 8px;
+    }
+    
+    .footer-right p {
+        font-size: 0.7rem;
+        margin: 0;
+        order: 2;
+    }
+    
+    .footer-icons {
+        margin-top: 0;
+        gap: 8px;
+        order: 1;
+    }
+    
+    .icon-mask {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 576px) {
+    /* Schedule section mobile fixes */
+    #schedule_section {
+        padding: 1rem;
+    }
+
+    #schedule_section h1 {
+        font-size: 1.5rem;
+    }
+
+    .schedule-col {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.2rem;
+    }
+
+    .map-section h2 {
+        font-size: 1.25rem;
+    }
+    
+    /* Extra small navbar adjustments */
+    .navbar-brand img {
+        height: 50px;
+    }
+    
+    .team-title {
+        font-size: 1.1rem;
+    }
+    
+    .team-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    /* Carousel extra small fixes */
+    .carousel-item {
+        height: 300px;
+    }
+    
+    .carousel-caption {
+        padding: 0.5rem 0.75rem;
+        display: block !important;
+        width: 95%;
+    }
+    
+    .carousel-caption h5 {
+        font-size: 1.1rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 0.8rem;
+    }
+    
+    /* Info section extra small fixes */
+    #info_section .features-wrapper {
+        padding: 12px;
+    }
+    
+    #info_section .features-number {
+        font-size: 1.75rem;
+    }
+    
+    #info_section i {
+        font-size: 2rem !important;
+    }
+    
+    /* Teams section extra small fixes */
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .team-card-name {
+        font-size: 1.35rem;
+    }
+    
+    .team-card-logo img {
+        max-height: 200px;
+    }
+    
+    /* History page mobile fixes */
+    .history-container {
+        flex-direction: column;
+        gap: 30px;
+        padding: 10px;
+    }
+    
+    .history-images {
+        display: none !important; /* Hide side images on mobile */
+    }
+    
+    .history-iframe {
+        width: 100% !important;
+        height: 600px !important;
+    }
+    
+    #history_section h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    
+    /* Footer extra small - EVEN MORE COMPACT */
+    .footer-content {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+    
+    .footer-logo {
+        height: 35px;
+    }
+    
+    .footer-team-title {
+        font-size: 0.75rem;
+    }
+    
+    .footer-team-subtitle {
+        font-size: 0.65rem;
+    }
+    
+    .footer-right p {
+        font-size: 0.65rem;
+    }
+    
+    .icon-mask {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .footer-icons {
+        gap: 6px;
+    }
+    
+    /* Search box mobile */
+    #search-filter-wrapper {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    #search_box {
+        width: 100%;
+        font-size: 1rem;
+    }
 }
