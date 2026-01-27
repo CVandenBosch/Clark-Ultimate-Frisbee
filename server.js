@@ -13,9 +13,15 @@ const passportLocalMongoose = require('passport-local-mongoose').default;
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  if (req.hostname === 'wtkbwebsite.ue.r.appspot.com') {
+    return res.redirect(301, 'https://clarkultimate.com' + req.originalUrl);
+  }
+  next();
+});
+
 
 //Setup URI
 const mongoUri = process.env.MONGO_URI;
