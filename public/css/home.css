@@ -1047,6 +1047,7 @@
         width: 100%;
         font-size: 1rem;
     }
+<<<<<<< HEAD
     
     /* Countdown extra small mobile adjustments */
     .countdown-title {
@@ -1081,3 +1082,6 @@
         font-size: 2rem;
     }
 }
+=======
+}
+>>>>>>> 24ba189f8acc90a68cb0c88717fa0147d2eab892
