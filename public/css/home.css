@@ -663,8 +663,13 @@
     }
 }
 
+.page-shell {
+    min-height: 100dvh;
+}
+
+
 /* Mobile devices */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     /* Navbar mobile fixes */
     .brand-text {
         margin-left: 15px;
