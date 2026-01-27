@@ -22,8 +22,28 @@
     <script src="/js/tournamentList.js" defer></script>
 
     <link rel="icon" href="data:,">
+    
+    <style>
+        html {
+            height: 100%;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1 0 auto;
+        }
+
+        #footer_section {
+            flex-shrink: 0;
+        }
+    </style>
 </head>
-<body class="d-flex flex-column page-shell"></body>
+<body>
+    <div class="content-wrapper">
     <section id="header_section">
         <nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
             <div class="w-100 d-flex justify-content-between align-items-center px-3">
@@ -101,6 +121,8 @@
             </div>
         </section>
     </div>
+    </div>
+    
     <section id="footer_section" class="mt-5">
         <footer class="footer-container py-1">
             <div class="footer-content container">
@@ -116,7 +138,6 @@
 
                 <div class="footer-divider"></div>
                 <div class="footer-right">
-                    <p class="mb-1">Website By: <strong>Dylan and Charlie</strong></p>
                     <div class="footer-icons">
                         <a href="https://www.instagram.com/wootown_ultimate/" target="_blank" class="social-link">
                             <div class="icon-mask"
@@ -139,6 +160,7 @@
                             </div>
                         </a>
                     </div>
+                    <p class="mb-1">Website By: <strong>Dylan and Charlie</strong></p>
                 </div>
             </div>
         </footer>

@@ -26,8 +26,28 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/css/home.css">
     <script src="js/login.js" defer></script>
+    
+    <style>
+        html {
+            height: 100%;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1 0 auto;
+        }
+
+        #footer_section {
+            flex-shrink: 0;
+        }
+    </style>
 </head>
-<body class="d-flex flex-column page-shell">
+<body>
+    <div class="content-wrapper">
     <section id="header_section">
         <nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
             <div class="w-100 d-flex justify-content-between align-items-center px-3">
@@ -71,6 +91,7 @@
             </div>
         </nav>
     </section>
+    
     <div class="flex-grow-1">
         <section id="login_section">
             <div class="container mt-5 mb-5">
@@ -97,6 +118,7 @@
                 </div>
             </div>
         </section>
+    </div>
     </div>
 
     <section id="footer_section">
