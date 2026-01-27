@@ -38,7 +38,7 @@ $(document).ready(function () {
                     <input type="number" class="form-control" name="opposingTeamScore" placeholder="Opposing Score" required min="0">
                 </div>
                 <div class="col-md-2 d-flex align-items-center">
-                    <button type="button" class="btn btn-danger remove-game-btn">Remove</button>
+                    <button type="button" class="btn btn-danger remove-game-btn">Remove Game</button>
                 </div>
             </div>
         `);
