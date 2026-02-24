@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>User Detail</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css"> 
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .proof-btn {
+            display: inline-block;
+            background-color: #F59E0B; /* Gold */
+            color: #1B1A17; 
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .proof-btn:hover, .proof-btn:active {
+            transform: translateY(-1px);
+            background-color: #fbbf24;
+            color: black;
+            text-decoration: none;
+        }
+        .chart-container {
+            background: var(--form-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 700px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            max-width: 700px;
+            margin: 0 auto 20px auto;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px 5px;
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #94A3B8;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .tx-link {
+            text-transform: capitalize;
+            color: #3b82f6;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .tx-link:hover, .tx-link:active {
+            text-decoration: underline;
+            color: #60a5fa;
+        }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.95); /* Slightly darker background */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-image {
+            max-width: 100%;
+            max-height: 85vh; /* Allow image to be taller now that button is gone */
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+        /* UPDATED: Solid red circle, perfectly centered X */
+        .modal-close-x {
+            position: absolute;
+            top: 20px; 
+            right: 20px;
+            background: #EF4444; /* Solid Red */
+            color: white;
+            border: none;
+            font-size: 2rem;
+            width: 40px; 
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10000;
+            padding: 0;
+            line-height: 0; /* Forces the character to center strictly by flexbox */
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+            transition: transform 0.2s, background 0.2s;
+        }
+        .modal-close-x:hover, .modal-close-x:active {
+            background: #DC2626; /* Darker red on tap */
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <a href="/highTide">
+        <img src="/img/bigs.gif" alt="Wootown Logo" class="logo">
+    </a>
+    <h1 id="user-title" style="text-transform: capitalize;">User History</h1>
+
+    <div class="stats-grid" id="stats-section" style="display: none;">
+        <div class="stat-card">
+            <div class="stat-label">Rank</div>
+            <div class="stat-value" id="stat-rank">-</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Balance</div>
+            <div class="stat-value">
+                <span id="stat-balance">-</span>
+                <img src="/img/schmeckle.gif" width="20" height="20">
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Net</div>
+            <div class="stat-value" id="stat-net">-</div>
+        </div>
+    </div>
+
+    <div class="chart-container" id="chart-wrapper" style="display: none;">
+        <canvas id="balanceChart"></canvas>
+    </div>
+
+    <div class="transaction-container" id="user-transaction-list">
+        <p>Loading details...</p>
+    </div>
+
+    <a href="/highTide" class="back-button">Back to Leaderboard</a>
+
+    <div id="image-modal" class="modal-overlay" onclick="closeModal()">
+        <button class="modal-close-x" onclick="closeModal()">&times;</button>
+        <img id="modal-img-element" class="modal-image" src="" alt="Proof" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        // --- Modal Functions ---
+        function openModal(imgUrl) {
+            const modal = document.getElementById('image-modal');
+            const imgElement = document.getElementById('modal-img-element');
+            imgElement.src = imgUrl;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('image-modal');
+            const imgElement = document.getElementById('modal-img-element');
+            modal.classList.remove('show');
+            document.body.style.overflow = ''; 
+            
+            setTimeout(() => {
+                imgElement.src = '';
+            }, 200);
+        }
+
+        // --- Existing Logic ---
+        async function loadUserDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const name = params.get('name');
+            
+            if (!name) {
+                document.getElementById('user-transaction-list').innerHTML = "<p>No user specified.</p>";
+                return;
+            }
+
+            const titleEl = document.getElementById('user-title');
+            titleEl.innerText = name === 'rbj' ? "RBJ's History" : `${name.charAt(0).toUpperCase() + name.slice(1)}'s History`;
+
+            try {
+                const [userRes, lbRes] = await Promise.all([
+                    fetch(`/highTide/api/user/${name}`),
+                    fetch(`/highTide/api/leaderboard`)
+                ]);
+
+                const data = await userRes.json();
+                const lbData = await lbRes.json();
+
+                const leaderboard = lbData.leaderboard || [];
+                const userStat = leaderboard.find(u => u.name.toLowerCase() === name.toLowerCase());
+                
+                let startBalance = 0;
+
+                if (userStat) {
+                    const rank = leaderboard.indexOf(userStat) + 1;
+                    const netSign = userStat.netChange >= 0 ? '+' : ''; 
+                    const netColor = userStat.netChange > 0 ? '#10B981' : (userStat.netChange < 0 ? '#EF4444' : '#94A3B8');
+
+                    startBalance = userStat.balance - userStat.netChange;
+
+                    const rankEl = document.getElementById('stat-rank');
+                    rankEl.innerText = "#" + rank;
+                    if (rank === 1) rankEl.style.color = '#F59E0B'; 
+                    else if (rank === 2) rankEl.style.color = '#E2E8F0'; 
+                    else if (rank === 3) rankEl.style.color = '#D97706'; 
+
+                    document.getElementById('stat-balance').innerText = userStat.balance;
+                    
+                    const netEl = document.getElementById('stat-net');
+                    netEl.innerText = netSign + userStat.netChange;
+                    netEl.style.color = netColor;
+
+                    document.getElementById('stats-section').style.display = 'grid';
+                }
+
+                const container = document.getElementById('user-transaction-list');
+                
+                if (!data.transactions || data.transactions.length === 0) {
+                    container.innerHTML = '<p>No transactions found for this user.</p>';
+                    return;
+                }
+
+                const sortedTx = [...data.transactions].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                
+                const chartLabels = ['Start'];
+                const chartBalances = [startBalance];
+                let currentBalance = startBalance;
+
+                sortedTx.forEach(tx => {
+                    if (tx.sender.toLowerCase() === name.toLowerCase()) {
+                        currentBalance -= tx.amount;
+                    } else if (tx.receiver.toLowerCase() === name.toLowerCase()) {
+                        currentBalance += tx.amount;
+                    }
+                    
+                    const date = new Date(tx.timestamp);
+                    chartLabels.push(`${date.toLocaleString('en-US', { month: 'short', day: 'numeric' })}`);
+                    chartBalances.push(currentBalance);
+                });
+
+                document.getElementById('chart-wrapper').style.display = 'block';
+                const ctx = document.getElementById('balanceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            label: 'Schmeckles',
+                            data: chartBalances,
+                            borderColor: '#06B6D4',
+                            backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#F59E0B',
+                            pointBorderColor: '#1B1A17',
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) { return ` ${context.parsed.y} Schmeckles`; }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                suggestedMin: 0,
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                                ticks: { color: '#94A3B8', stepSize: 5 }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#94A3B8', maxTicksLimit: 6 }
+                            }
+                        }
+                    }
+                });
+
+                container.innerHTML = data.transactions.map(tx => {
+                    const displayTime = new Date(tx.timestamp).toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+
+                    const isReceiver = tx.receiver.toLowerCase() === name.toLowerCase();
+                    const amountColor = isReceiver ? '#10B981' : '#EF4444'; 
+                    const amountSign = isReceiver ? '+' : '-';
+
+                    return `
+                        <div class="transaction-item" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 14px 10px; border-bottom: 1px solid #222;">
+                            <div class="tx-info" style="text-align: left; flex: 1; min-width: 0;">
+                                <div class="transaction-details" style="word-wrap: break-word; line-height: 1.4; font-size: 1rem;">
+                                    <a href="/highTide/user_detail?name=${tx.sender}" class="tx-link">${tx.sender}</a> paid 
+                                    <a href="/highTide/user_detail?name=${tx.receiver}" class="tx-link">${tx.receiver}</a>
+                                    <span style="color: #eee;">for ${tx.reason}</span>
+                                </div>
+                                <div style="font-size: 0.8rem; color: #888; margin-top: 6px;">${displayTime}</div>
+                            </div>
+                            
+                            <div class="tx-actions" style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
+                                ${tx.photoUrl ? `
+                                    <button type="button" onclick="openModal('${tx.photoUrl}')" class="proof-btn" 
+                                    style="display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                                            width: 45px; height: 45px; padding: 0; font-size: 0.65rem; line-height: 1; gap: 2px; border-radius: 8px;">
+                                        <span style="font-size: 1.2rem;">📸</span>
+                                        <span>PROOF</span>
+                                    </button>` : ''}
+
+                                <div class="amount" style="white-space: nowrap; font-weight: 800; font-size: 1.4rem; color: ${amountColor}; display: flex; align-items: center; gap: 4px;">
+                                    ${amountSign}${tx.amount} 
+                                    <img src="/img/schmeckle.gif" width="22" height="22">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error(err);
+                document.getElementById('user-transaction-list').innerHTML = '<p>Error loading data.</p>';
+            }
+        }
+        loadUserDetails();
+    </script>
+</body>
+</html>

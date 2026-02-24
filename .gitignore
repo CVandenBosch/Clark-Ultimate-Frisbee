@@ -2,3 +2,4 @@
 /.env
 /package.json
 /package-lock.json
+gcs-key.json

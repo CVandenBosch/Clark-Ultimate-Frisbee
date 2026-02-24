@@ -18,3 +18,25 @@ fetch('/get-schedule')
         // Default to 4 if there's an error
         document.getElementById('practices-per-week').innerHTML = '4';
     });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const beeGif = document.getElementById('bee-gif');
+    if (beeGif) {
+        beeGif.addEventListener('click', async () => {
+            const password = prompt("The wolf cries, the beez ____");
+            if (!password) return;
+
+            const res = await fetch('/api/hightide-auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+
+            if (res.ok) {
+                window.location.href = "/highTide";
+            } else {
+                alert("It's two Zs prolly");
+            }
+        });
+    }
+});

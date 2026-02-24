@@ -8,6 +8,19 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose').default;
+// --- GCS SETUP ---
+const { Storage } = require('@google-cloud/storage');
+const multer = require('multer');
+
+// Connect to Google Cloud
+const storage = new Storage({ keyFilename: 'gcs-key.json' });
+const bucket = storage.bucket('hightide-images'); // REPLACE WITH YOUR BUCKET NAME
+
+// Configure Multer (The middleman that holds the file briefly)
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB Limit (just in case)
+});
 
 //Configure body-parser and set static dir path.
 const app = express();
@@ -467,3 +480,207 @@ const PORT = process.env.PORT || 8080;  // Must use process.env.PORT for App Eng
 app.listen(PORT, () => {
   console.log(`server started at ${PORT}`);
 });
+
+// ======================================
+// HIGH TIDE BELOW THIS POINT
+// ======================================
+const path = require('path');
+
+// 1. Auth Logic: Sets session variable if password is correct
+app.post('/api/hightide-auth', (req, res) => {
+    const { password } = req.body;
+    // You can change this password to whatever you like
+    if (password?.toLowerCase() === "buzz") {
+        req.session.hightideUnlocked = true;
+        res.status(200).json({ message: "Unlocked" });
+    } else {
+        res.status(401).json({ message: "Forbidden" });
+    }
+});
+
+// 2. Middleware: Ensures user has unlocked the hive via the password prompt
+function protectHighTide(req, res, next) {
+    if (req.session && req.session.hightideUnlocked) {
+        return next();
+    }
+    res.redirect('/');
+}
+
+// ======================================
+// HIGH TIDE - MODELS & DATA
+// ======================================
+const DEADLINE = new Date('2026-03-06T23:59:59');
+
+const schmeckleSchema = new mongoose.Schema({
+    name: { type: String, required: true, unique: true, lowercase: true },
+    balance: { type: Number, default: 0 },
+    initialAmount: { type: Number, default: 0 }
+});
+const Schmeckle = mongoose.model('Schmeckle', schmeckleSchema);
+
+const transactionSchema = new mongoose.Schema({
+    sender: { type: String, lowercase: true },
+    receiver: { type: String, lowercase: true },
+    amount: Number,
+    reason: String,
+    photoUrl: String, 
+    timestamp: { type: Date, default: Date.now }
+});
+
+const Transaction = mongoose.model('Transaction', transactionSchema);
+
+// ======================================
+// HIGH TIDE - PAGE ROUTES
+// ======================================
+
+app.get('/highTide', protectHighTide, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'highTide', 'index.html'));
+});
+
+app.get('/highTide/transactions', protectHighTide, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'highTide', 'transactions.html'));
+});
+
+app.get('/highTide/user_detail', protectHighTide, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'highTide', 'user_detail.html'));
+});
+
+// ======================================
+// HIGH TIDE - API ROUTES
+// ======================================
+
+app.get('/highTide/api/leaderboard', protectHighTide, async (req, res) => {
+    try {
+        const balanceDocs = await Schmeckle.find({}).lean();
+        const transactions = await Transaction.find({}).sort({ timestamp: -1 }).lean();
+
+        let leaderboard = balanceDocs.map(doc => {
+            // Find their last transaction for tie-breaking
+            const lastTx = transactions.find(t => 
+                t.sender === doc.name || t.receiver === doc.name
+            );
+
+            return {
+                name: doc.name,
+                balance: doc.balance,
+                netChange: doc.balance - (doc.initialAmount || 0),
+                lastChange: lastTx ? new Date(lastTx.timestamp) : new Date(0)
+            };
+        });
+
+        leaderboard.sort((a, b) => {
+            if (b.balance !== a.balance) return b.balance - a.balance;
+            return a.lastChange - b.lastChange; 
+        });
+
+        const showForm = new Date() < DEADLINE;
+        const winner = leaderboard.length > 0 ? leaderboard[0].name : null;
+
+        res.json({ leaderboard, showForm, winner });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.post('/highTide/update_schmeckles', protectHighTide, upload.single('photo'), async (req, res) => {
+    if (new Date() > DEADLINE) return res.status(403).json({ error: 'deadline' });
+    
+    const person1 = req.body.person1?.toLowerCase().trim();
+    const person2 = req.body.person2?.toLowerCase().trim();
+    const amount = parseInt(req.body.amount);
+    const reason = req.body.reason?.trim();
+
+    if (!person1 || !person2 || isNaN(amount) || amount <= 0 || person1 === person2) {
+        return res.status(400).json({ error: 'invalid_input' });
+    }
+
+    if (!req.file) return res.status(400).json({ error: 'no_proof_provided' });
+
+    try {
+        const sender = await Schmeckle.findOne({ name: person1 });
+        const receiver = await Schmeckle.findOne({ name: person2 });
+
+        if (!sender || !receiver) return res.status(404).json({ error: 'user_not_found' });
+        
+        // Remove this if you want to allow negative balances/debt
+        if (sender.balance < amount) return res.status(400).json({ error: 'insufficient_funds' });
+
+        // 1. Upload to GCS first
+        const blob = bucket.file(`${Date.now()}_${req.file.originalname}`);
+        const blobStream = blob.createWriteStream({ resumable: false });
+
+        blobStream.on('error', err => {
+            console.error(err);
+            res.status(500).json({ error: 'server_error' });
+        });
+
+        blobStream.on('finish', async () => {
+            const photoUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+
+            // 2. ONLY update the database once the photo is safely stored
+            sender.balance -= amount;
+            receiver.balance += amount;
+            
+            await sender.save();
+            await receiver.save();
+
+            const newTx = new Transaction({ 
+                sender: person1, 
+                receiver: person2, 
+                amount, 
+                reason, 
+                photoUrl,
+                timestamp: new Date()
+            });
+            await newTx.save();
+
+            res.json({ success: true });
+        });
+
+        blobStream.end(req.file.buffer);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'server_error' });
+    }
+});
+
+app.get('/highTide/api/transactions', protectHighTide, async (req, res) => {
+    try {
+        const transactions = await Transaction.find({}).sort({ timestamp: -1 });
+        res.json({ transactions });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.get('/highTide/api/user/:name', protectHighTide, async (req, res) => {
+    const name = req.params.name.toLowerCase();
+    try {
+        const transactions = await Transaction.find({
+            $or: [{ sender: name }, { receiver: name }]
+        }).sort({ timestamp: -1 });
+        res.json({ transactions, name });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// ======================================
+// HIGH TIDE - SEED ROUTE (Visit once to setup)
+// ======================================
+// app.get('/highTide/seed', async (req, res) => {
+// const tens = ["ada", "ben", "cassius", "charlie", "chris", "duncan", "henry", "JD", "kane", "shosh", "silas", "simone", "sophie", "ty", "zayne"];
+// const zeros = ["amelia", "ari", "arpi", "cami", "cora", "daniel", "dylan", "ethmi", "evie", "grey", "jason", "jasper", "kass", "lola", "marco", "nick", "noah", "oscar", "suji", "van"];
+
+//     try {
+//         await Schmeckle.deleteMany({});
+//         const entries = [];
+//         tens.forEach(n => entries.push({ name: n.toLowerCase(), balance: 10, initialAmount: 10 }));
+//         zeros.forEach(n => entries.push({ name: n.toLowerCase(), balance: 0, initialAmount: 0 }));
+//         await Schmeckle.insertMany(entries);
+//         res.send("<h1>Hive Seeded!</h1><p>Added " + entries.length + " bees.</p><a href='/'>Go Home</a>");
+//     } catch (err) {
+//         res.status(500).send("Seed error: " + err.message);
+//     }
+// });

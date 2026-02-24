@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>Transaction History</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        .proof-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: #F59E0B; /* Gold */
+            color: #1B1A17; 
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .proof-btn:hover, .proof-btn:active {
+            transform: translateY(-1px);
+            background-color: #fbbf24;
+            color: black;
+            text-decoration: none;
+        }
+        .transaction-details em {
+            display: block; 
+            color: #aaa;
+        }
+        /* Styling for the clickable names */
+        .tx-link {
+            text-transform: capitalize;
+            color: #3b82f6;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .tx-link:hover, .tx-link:active {
+            text-decoration: underline;
+            color: #60a5fa; 
+        }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-image {
+            max-width: 100%;
+            max-height: 85vh; 
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+        .modal-close-x {
+            position: absolute;
+            top: 20px; 
+            right: 20px;
+            background: #EF4444; /* Solid Red */
+            color: white;
+            border: none;
+            font-size: 2rem;
+            width: 40px; 
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10000;
+            padding: 0;
+            line-height: 0; /* Forces the character to center strictly by flexbox */
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+            transition: transform 0.2s, background 0.2s;
+        }
+        .modal-close-x:hover, .modal-close-x:active {
+            background: #DC2626; /* Darker red on tap */
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <a href="/highTide">
+        <img src="/img/bigs.gif" alt="Wootown Logo" class="logo">
+    </a>
+    <h1>Transaction History</h1>
+
+    <div class="transaction-container" id="transaction-list">
+        <p>Loading history...</p>
+    </div>
+
+    <a href="/highTide" class="back-button">Back to Leaderboard</a>
+
+    <div id="image-modal" class="modal-overlay" onclick="closeModal()">
+        <button class="modal-close-x" onclick="closeModal()">&times;</button>
+        <img id="modal-img-element" class="modal-image" src="" alt="Proof" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        // --- Modal Functions ---
+        function openModal(imgUrl) {
+            const modal = document.getElementById('image-modal');
+            const imgElement = document.getElementById('modal-img-element');
+            imgElement.src = imgUrl;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('image-modal');
+            const imgElement = document.getElementById('modal-img-element');
+            modal.classList.remove('show');
+            document.body.style.overflow = ''; 
+            
+            setTimeout(() => {
+                imgElement.src = '';
+            }, 200);
+        }
+
+        // --- Load Transactions ---
+        async function loadTransactions() {
+            try {
+                const res = await fetch('/highTide/api/transactions');
+                const { transactions } = await res.json();
+                const container = document.getElementById('transaction-list');
+                
+                if (!transactions || transactions.length === 0) {
+                    container.innerHTML = '<p>No transactions found.</p>';
+                    return;
+                }
+
+                container.innerHTML = transactions.map(tx => {
+                    const displayTime = new Date(tx.timestamp).toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+
+                    return `
+                        <div class="transaction-item" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 14px 10px; border-bottom: 1px solid #222;">
+                            <div class="tx-info" style="text-align: left; flex: 1; min-width: 0;">
+                                <div class="transaction-details" style="word-wrap: break-word; line-height: 1.4; font-size: 1rem;">
+                                    <a href="/highTide/user_detail?name=${tx.sender}" class="tx-link">${tx.sender}</a> paid 
+                                    <a href="/highTide/user_detail?name=${tx.receiver}" class="tx-link">${tx.receiver}</a> 
+                                    <span style="color: #eee;">for ${tx.reason}</span>
+                                </div>
+                                <div style="font-size: 0.8rem; color: #888; margin-top: 6px;">${displayTime}</div>
+                            </div>
+                            
+                            <div class="tx-actions" style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
+                                ${tx.photoUrl ? `
+                                    <button type="button" onclick="openModal('${tx.photoUrl}')" class="proof-btn" 
+                                    style="display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                                            width: 45px; height: 45px; padding: 0; font-size: 0.65rem; line-height: 1; gap: 2px; border-radius: 8px;">
+                                        <span style="font-size: 1.2rem;">📸</span>
+                                        <span>PROOF</span>
+                                    </button>` : ''}
+
+                                <div class="amount" style="white-space: nowrap; font-weight: 800; font-size: 1.4rem; color: #fff; display: flex; align-items: center; gap: 4px;">
+                                    ${tx.amount} 
+                                    <img src="/img/schmeckle.gif" width="22" height="22">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error(err);
+                document.getElementById('transaction-list').innerHTML = '<p>Error loading transactions.</p>';
+            }
+        }
+        loadTransactions();
+    </script>
+</body>
+</html>
