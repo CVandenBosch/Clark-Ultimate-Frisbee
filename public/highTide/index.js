@@ -106,7 +106,7 @@ function renderFormOrWinner(showForm, winner, leaderboard = []) {
     } else {
         // ... (Keep your existing winner display logic here) ...
         const wName = winner.toLowerCase();
-        const displayName = wName === 'rbj' ? 'RBJ' : wName.charAt(0).toUpperCase() + wName.slice(1);
+        const displayName = wName === 'jd' ? 'JD' : wName.charAt(0).toUpperCase() + wName.slice(1);
 
         container.innerHTML = `
             <div id="winner-box" style="
@@ -151,7 +151,7 @@ function setupAutocomplete(inputId, listId, namesArray) {
         matches.forEach(match => {
             const div = document.createElement('div');
             div.className = 'autocomplete-item';
-            div.textContent = match.toLowerCase() === 'rbj' ? 'RBJ' : match.charAt(0).toUpperCase() + match.slice(1);
+            div.textContent = match.toLowerCase() === 'jd' ? 'JD' : match.charAt(0).toUpperCase() + match.slice(1);
             
             // When user taps a name, fill the input and hide the list
             div.addEventListener('click', () => {
