@@ -173,6 +173,10 @@ app.get("/history", function (req, res) {
     res.sendFile(__dirname + "/public/history.html");
 })
 
+app.get("/donate", function (req, res) {
+    res.sendFile(__dirname + "/public/donate.html");
+})
+
 app.get("/get-all-tournaments", function (req, res) {
     Tournament.find().then(tournaments => {
         res.send({
