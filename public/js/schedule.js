@@ -1,10 +1,10 @@
 function get_schedule_object(schedule, idx) {
     return `
-           <li class="list-group-item" style="background-color: background-color: rgba(255, 255, 255, 0.3);">
-                <div class="row text-center ${idx % 2 === 0 ? 'even_row' : 'odd_row'}">
-                    <div class="col-4"><strong>${schedule.day}</strong></div>
-                    <div class="col-4">${schedule.time}</div>
-                    <div class="col-4">${schedule.location}</div>
+           <li class="rounded-lg px-4 py-3 ${idx % 2 === 0 ? 'bg-base-100/30' : 'bg-base-100/15'}">
+                <div class="grid grid-cols-3 text-center">
+                    <div><strong>${schedule.day}</strong></div>
+                    <div>${schedule.time}</div>
+                    <div>${schedule.location}</div>
                 </div>
            </li>
 `

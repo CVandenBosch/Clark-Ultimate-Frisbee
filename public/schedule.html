@@ -1,234 +1,160 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="bees">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule</title>
-    <link rel="canonical" href="https://clarkultimate.com/">
-    <link rel="icon" type="image/png" href="/img/favicon.png">
-    <!--    Bootstrap-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
-            crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schedule</title>
+<link rel="canonical" href="https://clarkultimate.com/">
+<link rel="icon" type="image/png" href="/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tailwind.css">
+<link rel="stylesheet" href="/css/home.css">
 
-    <!--    jQuery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- jQuery: still required by schedule.js -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/js/schedule.js" defer></script>
 
-    <script src="/js/schedule.js" defer></script>
+<link rel="icon" href="data:,">
 
-    <link rel="stylesheet" href="/css/home.css">
-    <link rel="icon" href="data:,">
-
-    <style>
-        html {
-            height: 100%;
-        }
-        body {
-            background-image: url('/img/practice_maybe.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.1);
-            z-index: -1;
-        }
-
-        .content-wrapper {
-            flex: 1 0 auto;
-        }
-
-        #footer_section {
-            flex-shrink: 0;
-        }
-
-        #schedule_section {
-            background-color: rgba(255, 255, 255, 0.3);
-            padding: 2rem;
-            border-radius: 10px;
-        }
-        #schedule_list .list-group-item {
-            background-color: rgba(255, 255, 255, 0.3) !important;
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-        .schedule-row {
-            min-height: 40px;
-            align-items: center;
-        }
-        .schedule-col {
-            padding: 0.5rem 0.25rem;
-            word-wrap: break-word;
-            font-size: 0.95rem;
-        }
-    </style>
+<style>
+  body {
+    background-image: url('/img/practice_maybe.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+</style>
 </head>
-<body class="d-flex flex-column page-shell">
-    <div class="content-wrapper">
-    <section id="header_section">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
-            <div class="w-100 d-flex justify-content-between align-items-center px-3">
-                <a class="navbar-brand d-flex align-items-center brand-text" href="/">
-                    <img src="/img/justlogo.png"
-                         alt="Logo"
-                         height="40"
-                         class="me-2">
-                    <div class="text-container">
-                        <div class="team-title">WooTown Killer Bees</div>
-                        <div class="team-subtitle">Clark University</div>
-                    </div>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/schedule">Practice Schedule</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/tournamentList">Tournaments</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/history">History</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/donate">Donate</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link join-btn dropdown-toggle ms-3" href="#" id="joinDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Join Us
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="joinDropdown">
-                                <li><a class="dropdown-item" href="https://engage.clarku.edu/organization/ultimateteam?team=mens" target="_blank">Men</a></li>
-                                <li><a class="dropdown-item" href="https://engage.clarku.edu/organization/ultimatewomens" target="_blank">Women & Non-Binary</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </section>
+<body class="bg-base-100 min-h-dvh flex flex-col">
 
-    <div class="flex-grow-1">
-        <div class="container my-5">
-            <div class="row justify-content-left align-items-center g-4 mb-5">
-                <div class="col-lg-6 col-md-12 col-12">
-                    <section id="schedule_section" class="text-center">
-                        <h1 class="mb-4">Practice Schedule</h1>
-                        <ul id="schedule_list" class="list-group">
-                            <li class="list-group-item">
-                                <div class="row text-center schedule-row">
-                                    <div class="col-4 schedule-col"><strong>Monday</strong></div>
-                                    <div class="col-4 schedule-col">6-8pm</div>
-                                    <div class="col-4 schedule-col">@BGC</div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row text-center schedule-row">
-                                    <div class="col-4 schedule-col"><strong>Monday</strong></div>
-                                    <div class="col-4 schedule-col">6-8pm</div>
-                                    <div class="col-4 schedule-col">@BGC</div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row text-center schedule-row">
-                                    <div class="col-4 schedule-col"><strong>Monday</strong></div>
-                                    <div class="col-4 schedule-col">6-8pm</div>
-                                    <div class="col-4 schedule-col">@BGC</div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row text-center schedule-row">
-                                    <div class="col-4 schedule-col"><strong>Monday</strong></div>
-                                    <div class="col-4 schedule-col">6-8pm</div>
-                                    <div class="col-4 schedule-col">@BGC</div>
-                                </div>
-                            </li>
-                        </ul>
-                    </section>
-                </div>
-
-                <div class="col-lg-6 col-md-12">
-                    <div class="map-section">
-                        <div class="map-header" onclick="toggleMap('bgc-map')">
-                            <h2 class="mb-0">Boys and Girls Club (BGC)</h2>
-                            <span class="map-toggle" id="bgc-toggle">▼</span>
-                        </div>
-                        <div class="map-content" id="bgc-map">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m24!1m8!1m3!1d5906.631885177732!2d-71.8227202!3d42.2504251!3m2!1i1024!2i768!4f13.1!4m13!3e2!4m5!1s0x89e40427f3af3f83%3A0x891d499dc1cd639a!2sJonas%20Clark%20Hall%2C%20Jonas%20Clark%20Hall%2C%20Main%20Street%2C%20Worcester%2C%20MA!3m2!1d42.250988!2d-71.8230045!4m5!1s0x89e4042a067be5e1%3A0x564f865eda7167d5!2sBoys%20%26%20Girls%20Club%20of%20Worcester%2C%2065%20Boys%20%26%20Girls%20Club%20Wy%2C%20Worcester%2C%20MA%2001610!3m2!1d42.2500552!2d-71.81464179999999!5e0!3m2!1sen!2sus!4v1764731841899!5m2!1sen!2sus"
-                                    width="100%" height="300" style="border:0; border-radius: 5px" allowfullscreen="" loading="lazy"></iframe>
-                        </div>
-                    </div>
-                    <div class="map-section">
-                        <div class="map-header" onclick="toggleMap('dolan-map')">
-                            <h2 class="mb-0">Dolan Field House</h2>
-                            <span class="map-toggle" id="dolan-toggle">▼</span>
-                        </div>
-                        <div class="map-content" id="dolan-map">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d2891.617504863418!2d-71.82841613036267!3d42.25042973185692!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e2!4m5!1s0x89e40427f3af3f83%3A0x891d499dc1cd639a!2sJonas%20Clark%20Hall%2C%20Jonas%20Clark%20Hall%2C%20Main%20Street%2C%20Worcester%2C%20MA!3m2!1d42.250988!2d-71.8230045!4m5!1s0x89e404213c153973%3A0x6cc5de8a764896a2!2sDolan%20Field%20House%2C%20Dolan%20Field%20House%2C%20Beaver%20Street%2C%20Worcester%2C%20MA!3m2!1d42.2492556!2d-71.82868909999999!5e0!3m2!1sen!2sus!4v1764731669838!5m2!1sen!2sus"
-                                    width="100%" height="300" style="border:0; border-radius: 5px" allowfullscreen="" loading="lazy"></iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
+  <!-- NAV (same as home.html, for consistency across pages) -->
+  <div class="navbar bg-base-100/90 backdrop-blur sticky top-0 z-50 border-b border-base-200 mx-auto max-w-6xl px-4 sm:px-6 shrink-0">
+    <div class="navbar-start">
+      <a href="/" class="flex items-center gap-2.5">
+        <img src="/img/justlogo.png" alt="WooTown Killer Bees logo" class="h-9 w-9 object-contain">
+        <span class="font-display leading-tight">
+          <span class="block text-sm font-semibold tracking-wide">WOOTOWN KILLER BEES</span>
+          <span class="block text-[11px] text-base-content/50 -mt-0.5">Clark University</span>
+        </span>
+      </a>
     </div>
-    <section id="footer_section" class="mt-5">
-        <footer class="footer-container py-1">
-            <div class="footer-content container">
-                <div class="footer-left d-flex align-items-center">
-                    <img src="/img/justlogo.png" alt="Logo" class="footer-logo me-3">
-                    <div>
-                        <div class="footer-team-title">WooTown Killer Bees</div>
-                        <div class="footer-team-subtitle">Clark University</div>
-                        <a href="/editSchedule" class="footer-team-link">Admin Edit Schedule</a>
-                    </div>
-                </div>
 
-                <div class="footer-divider"></div>
+    <div class="navbar-end hidden md:flex">
+      <ul class="menu menu-horizontal gap-1 text-sm font-medium px-1">
+        <li><a href="/schedule" aria-current="page" class="text-warning-content bg-warning/90">Practice Schedule</a></li>
+        <li><a href="/tournamentList">Tournaments</a></li>
+        <li><a href="/history">History</a></li>
+        <li><a href="/donate">Donate</a></li>
+      </ul>
+      <details class="dropdown dropdown-end ml-2">
+        <summary class="btn btn-warning btn-sm rounded-full font-semibold">Join Us</summary>
+        <ul class="dropdown-content menu bg-base-100 rounded-box z-10 w-44 p-2 shadow-lg border border-base-200 mt-2">
+          <li><a href="https://engage.clarku.edu/organization/ultimateteam?team=mens" target="_blank">Men</a></li>
+          <li><a href="https://engage.clarku.edu/organization/ultimatewomens" target="_blank">Women &amp; Non-Binary</a></li>
+        </ul>
+      </details>
+    </div>
 
-                <div class="footer-right">
-                    <p class="mb-1">Website By: <strong>Dylan and Charlie</strong></p>
-                    <div class="footer-icons">
-                        <a href="https://www.instagram.com/wootown_ultimate/" target="_blank" class="social-link">
-                            <div class="icon-mask"
-                                 style="--icon-color:#f6c800;-webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg');mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg');">
-                            </div>
-                        </a>
-                        <a href="https://www.threads.net/@wootown_ultimate" target="_blank" class="social-link">
-                            <div class="icon-mask"
-                                 style="--icon-color:#f6c800;-webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/threads.svg');mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/threads.svg');">
-                            </div>
-                        </a>
-                        <a href="mailto:clarkwtkb@gmail.com" target="_blank" class="social-link">
-                            <div class="icon-mask"
-                                 style="--icon-color:#f6c800;-webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gmail.svg');mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gmail.svg');">
-                            </div>
-                        </a>
-                        <a href="https://x.com/WTKBUltimate" target="_blank" class="social-link">
-                            <div class="icon-mask"
-                                 style="--icon-color:#f6c800;-webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg');mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg');">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </section>
+    <div class="navbar-end md:hidden">
+      <details class="dropdown dropdown-end">
+        <summary class="btn btn-ghost btn-square">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </summary>
+        <ul class="dropdown-content menu bg-base-100 rounded-box z-10 w-56 p-3 shadow-lg border border-base-200 mt-3 gap-1">
+          <li><a href="/schedule" aria-current="page">Practice Schedule</a></li>
+          <li><a href="/tournamentList">Tournaments</a></li>
+          <li><a href="/history">History</a></li>
+          <li><a href="/donate">Donate</a></li>
+          <div class="divider my-1"></div>
+          <li><a href="https://engage.clarku.edu/organization/ultimateteam?team=mens" target="_blank" class="btn btn-warning btn-sm font-semibold">Join &ndash; Men</a></li>
+          <li><a href="https://engage.clarku.edu/organization/ultimatewomens" target="_blank" class="btn btn-outline btn-sm font-semibold mt-1">Join &ndash; Women &amp; Non-Binary</a></li>
+        </ul>
+      </details>
+    </div>
+  </div>
+
+  <main class="flex-1 mx-auto max-w-6xl px-4 sm:px-6 py-12 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+      <!-- SCHEDULE: frosted glass panel over the background photo, same concept as before -->
+      <section class="rounded-2xl bg-base-100/40 backdrop-blur-md border border-white/30 shadow-lg p-6 sm:p-8 text-center">
+        <h1 class="font-display text-2xl sm:text-3xl font-semibold mb-6">Practice Schedule</h1>
+        <ul id="schedule_list" class="flex flex-col gap-2 text-left">
+          <li class="rounded-lg bg-base-100/30 px-4 py-3 text-center text-base-content/70">
+            Loading schedule&hellip;
+          </li>
+        </ul>
+      </section>
+
+      <!-- MAPS -->
+      <section class="flex flex-col gap-4">
+        <div class="map-section rounded-2xl bg-base-100/40 backdrop-blur-md border border-white/30 shadow-lg overflow-hidden">
+          <div class="map-header flex items-center justify-between px-6 py-4" onclick="toggleMap('bgc-map')">
+            <h2 class="font-display text-lg font-semibold">Boys and Girls Club (BGC)</h2>
+            <span class="map-toggle" id="bgc-toggle">&#9660;</span>
+          </div>
+          <div class="map-content px-6" id="bgc-map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m24!1m8!1m3!1d5906.631885177732!2d-71.8227202!3d42.2504251!3m2!1i1024!2i768!4f13.1!4m13!3e2!4m5!1s0x89e40427f3af3f83%3A0x891d499dc1cd639a!2sJonas%20Clark%20Hall%2C%20Jonas%20Clark%20Hall%2C%20Main%20Street%2C%20Worcester%2C%20MA!3m2!1d42.250988!2d-71.8230045!4m5!1s0x89e4042a067be5e1%3A0x564f865eda7167d5!2sBoys%20%26%20Girls%20Club%20of%20Worcester%2C%2065%20Boys%20%26%20Girls%20Club%20Wy%2C%20Worcester%2C%20MA%2001610!3m2!1d42.2500552!2d-71.81464179999999!5e0!3m2!1sen!2sus!4v1764731841899!5m2!1sen!2sus"
+                    width="100%" height="300" class="rounded-lg border-0 mb-6" allowfullscreen="" loading="lazy"></iframe>
+          </div>
+        </div>
+
+        <div class="map-section rounded-2xl bg-base-100/40 backdrop-blur-md border border-white/30 shadow-lg overflow-hidden">
+          <div class="map-header flex items-center justify-between px-6 py-4" onclick="toggleMap('dolan-map')">
+            <h2 class="font-display text-lg font-semibold">Dolan Field House</h2>
+            <span class="map-toggle" id="dolan-toggle">&#9660;</span>
+          </div>
+          <div class="map-content px-6" id="dolan-map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d2891.617504863418!2d-71.82841613036267!3d42.25042973185692!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e2!4m5!1s0x89e40427f3af3f83%3A0x891d499dc1cd639a!2sJonas%20Clark%20Hall%2C%20Jonas%20Clark%20Hall%2C%20Main%20Street%2C%20Worcester%2C%20MA!3m2!1d42.250988!2d-71.8230045!4m5!1s0x89e404213c153973%3A0x6cc5de8a764896a2!2sDolan%20Field%20House%2C%20Dolan%20Field%20House%2C%20Beaver%20Street%2C%20Worcester%2C%20MA!3m2!1d42.2492556!2d-71.82868909999999!5e0!3m2!1sen!2sus!4v1764731669838!5m2!1sen!2sus"
+                    width="100%" height="300" class="rounded-lg border-0 mb-6" allowfullscreen="" loading="lazy"></iframe>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER (same as home.html, plus the admin link this page has) -->
+  <footer class="footer bg-neutral text-neutral-content sm:footer-horizontal items-center px-6 py-8 justify-between mx-auto max-w-6xl sm:px-6 shrink-0 w-full">
+    <aside class="flex items-center gap-3">
+      <img src="/img/justlogo.png" alt="WooTown Killer Bees logo" class="h-8 w-8 object-contain">
+      <div class="leading-tight">
+        <p class="text-sm font-semibold text-neutral-content">WooTown Killer Bees</p>
+        <p class="text-xs text-neutral-content/50">Clark University</p>
+        <a href="/editSchedule" class="text-xs text-warning hover:underline">Admin Edit Schedule</a>
+      </div>
+    </aside>
+    <nav class="flex gap-4">
+      <a href="https://www.instagram.com/wootown_ultimate/" target="_blank" aria-label="Instagram" class="hover:text-warning">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 2 .25 2.6.5a5.2 5.2 0 0 1 1.9 1.2 5.2 5.2 0 0 1 1.2 1.9c.25.6.44 1.4.5 2.6.06 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.06 1.2-.25 2-.5 2.6a5.2 5.2 0 0 1-1.2 1.9 5.2 5.2 0 0 1-1.9 1.2c-.6.25-1.4.44-2.6.5-1.3.06-1.7.07-4.9.07s-3.6 0-4.9-.07c-1.2-.06-2-.25-2.6-.5a5.2 5.2 0 0 1-1.9-1.2 5.2 5.2 0 0 1-1.2-1.9c-.25-.6-.44-1.4-.5-2.6C2.2 15.6 2.2 15.2 2.2 12s0-3.6.07-4.9c.06-1.2.25-2 .5-2.6a5.2 5.2 0 0 1 1.2-1.9 5.2 5.2 0 0 1 1.9-1.2c.6-.25 1.4-.44 2.6-.5C8.4 2.2 8.8 2.2 12 2.2Zm0 3.05a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5Zm0 11.13a4.38 4.38 0 1 1 0-8.76 4.38 4.38 0 0 1 0 8.76Zm7.02-11.39a1.58 1.58 0 1 1-3.15 0 1.58 1.58 0 0 1 3.15 0Z"/></svg>
+      </a>
+      <a href="https://www.threads.net/@wootown_ultimate" target="_blank" aria-label="Threads" class="hover:text-warning">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.2 2C7.4 2 4 5.1 4 10.1v3.8C4 18.9 7.4 22 12.2 22c4.6 0 7.7-2.7 7.9-6.9h-2.4c-.2 2.8-2.1 4.6-5.5 4.6-3.4 0-5.6-2-5.6-5.8v-.7c1 .5 2.4.8 4 .8 3.9 0 6.6-1.9 6.6-5 0-3-2.4-4.8-6-4.8-3.4 0-5.9 1.6-6.5 4.3l2.3.5c.4-1.6 1.8-2.6 4.1-2.6 2.1 0 3.5.9 3.5 2.5 0 1.5-1.4 2.5-4 2.5-1.6 0-2.9-.3-3.9-.9V10c0-3.6 2-5.7 5.5-5.7 3.3 0 5.2 1.8 5.4 4.5h2.4C19.7 4.6 16.6 2 12.2 2Z"/></svg>
+      </a>
+      <a href="mailto:clarkwtkb@gmail.com" aria-label="Email" class="hover:text-warning">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13Zm2.2.5 7.8 6.3L19.8 6H4.2ZM20 8.1l-7.4 6a1 1 0 0 1-1.2 0L4 8.1V18h16V8.1Z"/></svg>
+      </a>
+      <a href="https://x.com/WTKBUltimate" target="_blank" aria-label="X" class="hover:text-warning">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.24 3H21l-6.6 7.54L22.2 21h-6.14l-4.8-6.29L5.7 21H3l7.06-8.07L2 3h6.28l4.34 5.74L18.24 3Zm-1.08 16.17h1.7L7.9 4.74H6.08l11.08 14.43Z"/></svg>
+      </a>
+    </nav>
+    <p class="text-xs text-neutral-content/50">Website by Dylan &amp; Charlie</p>
+  </footer>
+
+  <script>
+    document.querySelectorAll('details.dropdown').forEach((dropdown) => {
+      dropdown.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => dropdown.removeAttribute('open'));
+      });
+    });
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('details.dropdown[open]').forEach((dropdown) => {
+        if (!dropdown.contains(e.target)) dropdown.removeAttribute('open');
+      });
+    });
+  </script>
 </body>
 </html>

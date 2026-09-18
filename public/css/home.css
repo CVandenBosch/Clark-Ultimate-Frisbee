@@ -12,3 +12,23 @@ details.dropdown[open] > summary::before {
 }
 details.dropdown summary::-webkit-details-marker { display: none; }
 details.dropdown summary { list-style: none; cursor: pointer; }
+
+/* Collapsible map sections on the schedule page (toggleMap in schedule.js) */
+.map-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.map-content.show {
+  max-height: 400px;
+}
+.map-header {
+  cursor: pointer;
+}
+.map-toggle {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+.map-toggle.rotated {
+  transform: rotate(180deg);
+}
